@@ -1,16 +1,8 @@
 import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query} from "@nestjs/common";
 import {IsEmail, IsInt, Length, Min } from "class-validator";
-import {UsersService} from "./users.service";
+import {CreateUserInputModelType, UsersService} from "./users.service";
 
-class CreateUserInputModelType {
-    @IsEmail()
-    email: string;
-    @Length(5, 10)
-    name: string;
-    @IsInt()
-    @Min(0)
-    childrenCount: number;
-}
+
 
 /*Это как роут, который мы настраивали для группировки элементов*/
 @Controller('users')
@@ -41,13 +33,14 @@ export class UsersController {
         };
     }
     @Post()
-    createUser(@Body() inputModel: CreateUserInputModelType) {
+    async createUser(@Body() inputModel: CreateUserInputModelType) {
         if(11 > 10) {
             throw new BadRequestException([
                 {message: 'Bad blogger id', field: 'bloggerId'},
             ]);
         }
 
+        await this.usersService.createUser(inputModel);
 
         return inputModel;
         /*return {
